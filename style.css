@@ -1,0 +1,188 @@
+*{
+    margin: 0px auto;
+    padding: 0px;
+    font-family: calibri, arial, verdana;
+    font-size: 14px;
+}
+body{
+    color: gray;
+    width: 99%;
+    background: #6C7A89;
+}
+table{
+    border-collapse: collapse;
+    min-width: 50%;
+}
+th, tr, td, #tblItem{
+    border: 2px solid #93b8bd;
+}
+td{
+    text-align: left;
+}
+textarea{
+    resize: none;
+}
+.tblItem:hover{
+    background-color: #CCC;
+    cursor: default;
+}
+.container{
+    position: relative;
+    overflow-x: auto;
+    height: 36.340em;
+    padding: 15px;
+    
+    background: #f7f7f7;
+    border: 0px solid rgba(147, 184, 189,0.8);
+
+    -webkit-box-shadow: 2px;
+    border-radius: 5px;
+
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: both;
+
+    animation-duration: 0.5s;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+ 
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment  {
+  display: none;
+}
+ 
+::-webkit-scrollbar-track-piece  {
+  background-color: #1D6F23;
+  -webkit-border-radius: 6px;
+}
+ 
+::-webkit-scrollbar-thumb:vertical {
+  background-color: #93b8bd;
+  -webkit-border-radius: 6px;
+}
+label,  input {
+    display: block;
+    float: left;
+}
+
+label {    
+    text-align: left;
+    width: 125px;
+    padding-left: 5px;
+    padding-right: 0px;
+    padding-bottom: 10px;
+
+}
+
+fieldset {
+    border: solid 0px gray;
+}
+fieldset:after{
+    content: ' ';
+    display: block;
+    width: 100%;
+    height: 2px;
+    margin-top: 23px;
+    background: -webkit-linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%); 
+    background: linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%); 
+}
+#ministerios:after, #nivel:after{
+    display: none;
+    
+}
+br {
+    clear: left;
+}
+.btnMenu{
+    min-width: 200px;
+    cursor: pointer;  
+    background: rgb(29, 111, 35);
+    padding: 8px 5px;
+    color: #fff;
+    font-size: 18px;  
+    border: 1px solid #6C7A89;   
+
+    text-shadow: 0 1px 1px #333;
+    margin-top: 3px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    transition: all 0.2s linear;
+}
+button{
+    outline-style: none;
+}
+#btnGravar, #btnEditar, #btnLimpar{
+    width: 100px!important;
+    cursor: pointer;  
+    background: rgb(29, 111, 35);
+    padding: 8px 5px;
+    color: #fff;
+    font-size: 18px;  
+    border: 1px solid #fff;   
+    
+    text-shadow: 0 1px 1px #333;
+
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    transition: all 0.2s linear;
+
+}
+#divTable{
+    display: none;
+}
+/*estilo do botão submit no hover */
+#btnGravar:hover, #btnEditar:hover, #btnLimpar:hover{
+    background: #1D696F;
+}
+#mensagem{
+    width: 50%!important;
+    text-align: center;
+    height: 18px;
+    top: -35px;
+    position: relative;
+    padding: 8px 20px;
+    left: 20px;
+    color: #fff;
+    display: none;
+    border: 1px solid #fff;   
+    text-shadow: 0 1px 1px #333;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    transition: all 0.2s linear;
+}
+.red{
+    background: rgb(255, 0, 0);
+}
+.green{
+    background: rgb(20, 160, 30);
+}
+#tblLista{
+    width: 80%;
+    text-align: center;
+    white-space: nowrap;
+}
+#tblLista th{
+    min-width: 30px;
+}
+#tblLista td{
+    padding-left: 2px;
+    padding-right: 5px;
+}
+@media screen and (max-width: 800px){
+    
+    label, input{
+        clear: left;
+        min-width: 20px;
+    }
+    textarea{
+        display: list-item;
+        clear: left;
+    }
+}

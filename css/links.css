@@ -1,0 +1,127 @@
+nav{
+    align-content: center;
+}
+.menu{
+    width: 100%;
+    height: 30px;
+    background-color: #1D6F23;
+    border:1px solid #c0c0c0;
+}
+.menu ul{
+    list-style: none;
+    position: relative;
+    z-index: 1;
+}
+.menu ul li{
+    width: 150px;
+    float: left;
+}
+.menu a{
+    padding: 5px;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    background-color: #1D6F23;
+    color: #fff;
+}
+.menu ul ul{
+    position: absolute;
+    visibility: hidden;
+
+}
+.menu ul li:hover ul{
+    visibility: visible;
+}
+.menu a:hover{
+    background-color: #1D696F;
+
+}
+.menu ul ul li{
+    float: none;
+    border-bottom: 1px solid #c0c0c0; 
+
+}
+.menu ul ul li a{
+    background-color: #1D6F23;
+}
+#opcoes{
+    text-align: left;
+    float: right;
+    right: 3px;
+    position: absolute;
+    width: 50px;
+}
+#bemVindo{
+    color: #fff;
+    text-align: right;
+    right: 50px;
+    margin-right: 10px;
+    top: 5px;
+    border: none;
+    position: absolute;
+
+}
+.subMenu{
+    height: 50px;
+}
+label[for="bt_menu"]{
+    padding: 5px;
+    background-color: #1D6F23;
+    color: #fff;
+    text-align: center;
+    font-size: 30px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    display: none;
+}
+#bt_menu{
+    display: none;
+}
+@media screen and (max-width: 800px){
+    #bemVindo{
+        display: none;
+    }
+    label[for="bt_menu"]{
+        display: block;
+        width: 100%;
+        height: 40px;
+    }
+    #bt_menu:checked ~ .menu{
+        margin-left: 0;
+        display: block;
+    }
+    .container{
+        top: 50px;
+    }
+    .menu{
+        border: none;
+        width: 100%;
+        display: none;
+        float: left;
+    }
+    .menu ul li{
+        width: 100%;
+        float: none;
+    }
+    .menu ul ul{
+        position: static;
+        overflow: hidden;
+        max-height: 0;
+        transition: all .4s;
+    }
+    .menu ul ul li{
+        border: none;
+    }
+    .menu ul ul li a{
+        background-color: #254c25;
+    } 
+    .menu ul li:hover  ul{
+        height: auto;
+        max-height: 200px;
+        
+    }
+    #opcoes{
+        width: 100%;
+    }
+}
