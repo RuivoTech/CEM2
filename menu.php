@@ -35,7 +35,7 @@ and open the template in the editor.
                             <th id="tbl_menuId">ID</th>
                             <th id="tbl_menuNome">Nome</th>
                             <th id="tbl_menuLink">Link</th>
-                            <!--<th id="tbl_acoes">Ações</th> -->
+                            <th id="acoes">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="listTblBody">

@@ -11,14 +11,32 @@ if ($substLista == ",idade" or $substLista == "_todos") {
     $lista = substr($lista, 0, -6);
 }
 $val = filter_input(INPUT_POST, "val");
+$evento = filter_input(INPUT_POST, "evento");
 $listaSeparada = explode(",", $lista);
 $listaOpcoes = "";
 $opcoes = "";
 if ($btn) {
     switch ($btn) {
+        case "inscricoes":
+            $condicao = ($val) == "" ? "" : "WHERE $btn.id=$val";
+            if($evento){
+                $condicao = "WHERE $btn.idEvento=$val";
+            }
+            $pago = $condicao == "" ? "(case when i.pago then 'Sim' else 'Não' end) as pago" : "pago";
+            if($lista == "*"){
+                $sql = "SELECT id, nome, email, celular, $pago, idEvento FROM $btn $condicao";
+            }else{
+                $sql = "SELECT i.id, i.nome, i.email, i.celular, $pago, e.descricao FROM $btn i INNER JOIN eventos e on e.id = i.idEvento $condicao";
+            }
+            break;
+        case "eventos":
+            $condicao = ($val == "") ? "" : "WHERE $btn.id=$val";
+            $ativo = $condicao == "" ? "(case when ativo then 'Sim' else 'Não' end) as ativo" : "ativo";
+            $sql = "SELECT id, descricao, dataInicio, dataFim, FORMAT(valor, 2, 'pt_BR') as valor, $ativo FROM $btn $condicao";
+            break;
         case "logs":
-            $sql = "SELECT logs.id, membros.nome, logs.ip, DATE_FORMAT(logs.hora,'%d/%m/%Y - %H:%m:%s') as hora, logs.mensagem FROM logs RIGHT JOIN membros ON logs.idMembro = membros.id WHERE logs.id LIKE '%%' ORDER By id ASC";
-            //$listaOpcoes = "logs.id, membros.nome, logs.ip, DATE_FORMAT(logs.hora,'%d/%m/%Y - %H:%m:%s') as hora, logs.mensagem";
+            $sql = "SELECT logs.id, membros.nome, logs.ip, DATE_FORMAT(logs.hora,'%d/%m/%Y - %H:%i:%s') as hora, logs.mensagem FROM logs RIGHT JOIN membros ON logs.idMembro = membros.id WHERE logs.id LIKE '%%' ORDER By id ASC";
+            //$listaOpcoes = "logs.id, membros.nome, logs.ip, DATE_FORMAT(logs.hora,'%d/%m/%Y - %H:%i:%s') as hora, logs.mensagem";
             //$btn = "logs RIGHT JOIN membros ON logs.idMembro = membros.id";
             //$opcoes = "logs.id LIKE '%%' ORDER By id ASC";
             break;
@@ -84,13 +102,18 @@ if ($btn) {
         case "usuarios":
             //$btn = "membros LEFT JOIN usuarios ON membros.id = usuarios.idMembro JOIN nivel ON nivel.id = usuarios.id_nivel";
             if ($lista == "*") {
-                $sql = "SELECT usuarios.id, membros.email, usuarios.password, usuarios.password confirmarSenha, nivel.id nivel FROM membros LEFT JOIN usuarios ON membros.id = usuarios.idMembro JOIN nivel ON nivel.id = usuarios.id_nivel WHERE membros.id='$val' OR (membros.nome LIKE '%$val%' OR membros.email LIKE '%$val%')";
+                $sql = "SELECT usuarios.id, usuarios.idMembro, membros.email, usuarios.password, usuarios.password confirmarSenha, nivel.id nivel FROM membros LEFT JOIN usuarios ON membros.id = usuarios.idMembro JOIN nivel ON nivel.id = usuarios.id_nivel WHERE membros.id='$val' OR (membros.nome LIKE '%$val%' OR membros.email LIKE '%$val%')";
                 //$listaOpcoes = "usuarios.id, membros.email, usuarios.password, usuarios.password confirmarSenha, nivel.id nivel";
             } else {
                 $sql = "SELECT membros.id, membros.email, membros.nome, nivel.nome nomeNivel, nivel.descricao FROM membros LEFT JOIN usuarios ON membros.id = usuarios.idMembro JOIN nivel ON nivel.id = usuarios.id_nivel WHERE membros.id='$val' OR (membros.nome LIKE '%$val%' OR membros.email LIKE '%$val%')";
                 //$listaOpcoes = "membros.id, membros.email, membros.nome, nivel.nome nomeNivel, nivel.descricao";
             }
             //$opcoes = "membros.id='$val' OR (membros.nome LIKE '%$val%' OR membros.email LIKE '%$val%')";
+            break;
+        case "dadosusuario":
+            $session = filter_input(INPUT_POST, "session");
+            $usuario = base64_decode(substr($session, 22, strlen($session)));
+            $sql = "SELECT usuarios.id, usuarios.idMembro, membros.email, usuarios.password, usuarios.password confirmarSenha, nivel.id nivel FROM membros LEFT JOIN usuarios ON membros.id = usuarios.idMembro JOIN nivel ON nivel.id = usuarios.id_nivel WHERE membros.email='".$usuario."'";
             break;
         case ("ministerios" or "nivel"):
             $condicao = is_numeric($val) ? "$btn.id='$val'" : "$btn.nome LIKE '%$val%'";

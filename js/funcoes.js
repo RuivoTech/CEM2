@@ -10,6 +10,9 @@ $(document).ready(function () {
             $(".menu").html(data);
         }
     });
+    if ($("#dadosUsuario").length) {
+        Selecionar("tbldadosUsuario", "*_todos", '');
+    }
 
     setTimeout(function () {
         $("#sair").attr("href", "#sair");
@@ -19,12 +22,13 @@ $(document).ready(function () {
             window.sessionStorage.removeItem("nivel");
             Verificar();
         });
-    }, 100);
+
+    }, 300);
 
     var arr = $.map($('#listTblHead th'), function (el, i) {
-        if($('#listTblHead th:eq(' + i + ')').attr("id") === "acoes"){
-        }else{
-           return [[$('#listTblHead th:eq(' + i + ')').attr("id").replace(/tbl_/g, '')]];
+        if ($('#listTblHead th:eq(' + i + ')').attr("id") === "acoes") {
+        } else {
+            return [[$('#listTblHead th:eq(' + i + ')').attr("id").replace(/tbl_/g, '')]];
         }
     });
     if ($("#home").length) {
@@ -45,6 +49,9 @@ $(document).ready(function () {
             Select("tblNivel");
         }, 300);
     }
+    if($("#inscricoes").length){
+		Select("tblEventos");
+	}
     $("#estadoCivil").change(function () {
         if ($(this).val() == 2) {
             $("#nomeEspos").attr("disabled", false);
@@ -75,16 +82,11 @@ $(document).ready(function () {
             Listar($(this).val(), arr, "");
         }
     });
-    $("#listTblBody").delegate('tr', 'click', function () {
-        $('form').each(function () {
-            this.reset();
-            var btnListar = $("#btnListar").val().replace(/tbl/g, '');
-            $("#btnListar").html("Mostrar " + btnListar);
-            $("input[name=ministerios]").prop('checked', $(this).prop('false'));
-        });
-        Selecionar($("#btnListar").val(), "*_todos", $(this).attr("id").replace(/listTblTr_/g, ''));
-        //get <td> element values here!!??
+    
+    $("#btnSelecionar").click(function(){
+    	Listar($("#btnListar").val(), arr, $("#eventos").val());
     });
+
     $("#pesquisaTbl").keyup(function () {
         $("#listTblBody").empty();
         Listar($("#btnListar").val(), arr, $(this).val());
@@ -236,24 +238,24 @@ function Enviar(btn) {
         ids.push($(this).val());
     });
     var formData = $(btn).parent("form").serializeArray();
-    if (btn == "#btnEditar" && ($("#idEspos").length | $("#idMembro").length)) {
+    if (btn == "#btnEditar" && $("#idEspos").length > 0) {
         formData.push({name: "id", value: $("#id").val()}, {name: "idEspos", value: $("#idEspos").val()}, {name: "session", value: window.sessionStorage.getItem("session")});
     }
     if ($("input[name=idMembro]").length) {
         formData.push({name: "idMembro", value: $("#idMembro").val()}, {name: "session", value: window.sessionStorage.getItem("session")});
     }
-    if ($("#frmNivel").length | $("#frmUsuarios").length | $("#frmMinisterios").length) {
+    if (($("#frmNivel").length | $("#frmUsuarios").length | $("#frmMinisterios").length | $("#frmEventos").length | $("#frmInscricoes").length) && $("#id").val() != "") {
         formData.push({name: "id", value: $("#id").val()});
     }
-    if($("#ministerios").length){
+    if ($("#ministerios").length) {
         var name = "ministerios";
-    }else if($("#menu").length){
+    } else if ($("#menu").length && $("#menuId").length != "") {
         formData.push({name: "menuId", value: $("#id").val()});
         var name = "idNivel";
     }
     formData.push({name: "btn", value: $(btn).attr("name")}, {name: $(btn).attr("name"), value: $(btn).val()}, {name: name, value: ids}, {name: "session", value: window.sessionStorage.getItem("session")});
     $.ajax({
-        async: false,
+        async: true,
         url: link + $(btn).parent("form").attr("action"),
         type: "POST",
         data: formData,
@@ -279,12 +281,12 @@ function Enviar(btn) {
     });
 }
 function Listar(btnValue, arr, val) {
-
+	var evento =  val != "" ? "&evento=1" : "";
     $.ajax({
-        async: false,
+        async: true,
         type: "POST",
         dataType: 'JSON',
-        data: "btn=" + btnValue + "&lista=" + arr + "&val=" + val + "&session=" + window.sessionStorage.getItem("session"),
+        data: "btn=" + btnValue + "&lista=" + arr + "&val=" + val + "&session=" + window.sessionStorage.getItem("session") + evento,
         cache: false,
         url: link + "selecionar.php",
         success: function (dados) {
@@ -312,10 +314,27 @@ function Listar(btnValue, arr, val) {
                         }
                     }
                 }
-                $("#listTblTr_" + dados[el].id).append("<td><button type='button' class='delete' name='Excluir' value='" + dados[el].id + "'>Excluir</button></td>");
+                if ($("#acoes").length) {
+                    $("#listTblTr_" + dados[el].id).append("<td><button type='button' class='editar ' name='Editar' id='alterar_" + dados[el].id + "' value='" + dados[el].id + "'>Editar</button> | <button type='button' class='delete' name='Excluir' id='excluir_" + dados[el].id + "' value='" + dados[el].id + "'>Excluir</button></td>");
+                }
                 /*if (!$("#tbl_idade").length) {
                  $("#listTblTr_" + dados[el].id).append('<td><button type="button" id="visualizarItem" value="' + dados[el].id + '">Visualizar</button>');
                  }*/
+                $("#alterar_" + dados[el].id).on('click', function () {
+                    $('form').each(function () {
+                        this.reset();
+                        var btnListar = $("#btnListar").val().replace(/tbl/g, '');
+                        $("#btnListar").html("Mostrar " + btnListar);
+                        $("input[name=ministerios]").prop('checked', $(this).prop('false'));
+                    });
+                    Selecionar($("#btnListar").val(), "*_todos", $(this).val());
+                    //get <td> element values here!!??
+                });
+                $("#excluir_" + dados[el].id).on('click', function () {
+                    
+                    Excluir($(this).val());
+                    return false;
+                });
             }
         }
     });
@@ -338,11 +357,14 @@ function Select(btn) {
                     }
                     //alert(count);
                     count++;
-                } else if (btn == "tblNivel" | btn == "tblMenu") {
+                } else if (btn == "tblNivel" | btn == "tblMenu" | btn == "tblEventos") {
                     if ($("#usuarios").length) {
                         $("#nivel").append("<option value=\"" + data[elemento].id + "\" title=\"" + data[elemento].descricao + "\">" + data[elemento].nome + "</option>")
                     } else if (btn == "tblMenu") {
-                        $("#menuIdPai").append("<option value=\"" + data[elemento].id + "\">" + data[elemento].nome + "</option>")
+                        $("#menuIdPai").append("<option value=\"" + data[elemento].id + "\">" + data[elemento].nome + "</option>");
+                    } else if (btn == "tblEventos") {
+                        $("#eventos").append("<option value=\"" + data[elemento].id + "\">" + data[elemento].descricao + "</option>");
+                        $("#idEvento").append("<option value=\"" + data[elemento].id + "\">" + data[elemento].descricao + "</option>");
                     } else {
                         $("#nivel").append("<input type=\"checkbox\" name=\"idNivel\" value=\"" + data[elemento].id + "\" id=\"nivel_" + +data[elemento].id + "\" /><label for=\"nivel_" + data[elemento].id + "\" title=\"" + data[elemento].descricao + "\">" + data[elemento].nome + "</label>");
                         if (count == 9) {
@@ -355,6 +377,38 @@ function Select(btn) {
                 }
 
             }
+        }
+    });
+}
+function Excluir(id) {
+    var arr = $.map($('#listTblHead th'), function (el, i) {
+        if ($('#listTblHead th:eq(' + i + ')').attr("id") === "acoes") {
+        } else {
+            return [[$('#listTblHead th:eq(' + i + ')').attr("id").replace(/tbl_/g, '')]];
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "registrar.php",
+        data: "btn=excluir&excluir=membros&id=" + id + "&session=" + window.sessionStorage.getItem("session"),
+        success: function (dados) {
+            if (dados.verifica === 0) {
+                $("#mensagem").attr("class", "green");
+                $("#mensagem").css({"display": "block"});
+                $("#mensagem").html(dados.mensagem);
+                setTimeout(function () {
+                    $("#mensagem").fadeOut().empty();
+                }, 3000);
+            } else {
+                $("#mensagem").attr("class", "red");
+                $("#mensagem").css({"display": "block"});
+                $("#mensagem").html(dados.mensagem);
+                setTimeout(function () {
+                    $("#mensagem").fadeOut().empty();
+                }, 3000);
+            }
+            $("#listTblBody tr").remove();
+            Listar($("#btnListar").val(), arr, "");
         }
     });
 }
@@ -404,8 +458,10 @@ function Selecionar(btnValue, arr, val) {
                     $("#" + key).val(obj[key]);
                 }
             }
-            $("#divTable").toggle();
-            $("#divFrm").toggle();
+            if (btnValue != "tbldadosUsuario") {
+                $("#divTable").toggle();
+                $("#divFrm").toggle();
+            }
         }
     });
 }

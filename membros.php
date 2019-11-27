@@ -33,6 +33,7 @@ and open the template in the editor.
             <div id="divTable">
                 <label for="pesquisaTbl">Procurar:</label>
                 <input type="text" name="pesquisa" id="pesquisaTbl" value="" size="90" /><br />
+                <p id="mensagem"></p>
                 <table id="tblLista">
                     <thead id="listTblHead">
                         <tr>

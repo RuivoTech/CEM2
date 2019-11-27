@@ -14,6 +14,7 @@ if (empty($login) and empty($password)) {
     $query->bindParam(':email', $login);
     $query->execute();
     $users = $query->fetchAll();
+    //echo "<pre>".print_r($users, true)."</pre>";
     if (password_verify($password, $users[0]["password"])) {
         if (count($users) <= 0) {
             $json = array('verifica' => 0, 'mensagem' => "Usuário ou senha incorretos.");
@@ -24,7 +25,15 @@ if (empty($login) and empty($password)) {
             $user = $users[0];
             $hash = salt() . base64_encode($users[0]["email"]);
             $nivel = salt() . base64_encode($users[0]["id_nivel"]);
-            $json = array('verifica' => 1, 'mensagem' => "Login bem sucedido, aguarde...", 'local' => "home.php", 'session' => $hash, 'nivel' => $nivel);
+            $sqlSenhaPadrao = "SELECT * from senhaPadrao";
+            $senha = $PDO->prepare($sqlSenhaPadrao);
+            $senha->execute();
+            $senhaPadrao = $senha->fetch();
+            if(password_verify($password, $senhaPadrao["senha"])){
+                $json = array('verifica' => 1, 'mensagem' => "Por favor, altere sua senha...", 'local' => "dadosUsuario.php", 'session' => $hash, 'nivel' => $nivel);
+            }else{
+                $json = array('verifica' => 1, 'mensagem' => "Login bem sucedido, aguarde...", 'local' => "home.php", 'session' => $hash, 'nivel' => $nivel);
+            }
             $nome = explode(" ", $user["nome"]);
             $mensagem = $nome[0] . " " . $nome[1] . " acessou o sistema.";
             salvaLog($mensagem, $user["idMembro"]);
