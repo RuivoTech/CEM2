@@ -86,7 +86,7 @@ foreach ($data as $campo => $valor) {
 
 if (filter_input(INPUT_POST, "btn") == "excluir") {
     $id = filter_input(INPUT_POST, "id");
-    $sql = "DELETE FROM " . filter_input(INPUT_POST, "excluir") . " WHERE id=" . $id;
+    $sql = "DELETE FROM " . strtolower(substr(filter_input(INPUT_POST, "excluir"), 3)) . " WHERE id=" . $id;
 }
 
 $query = $PDO->prepare($sql);

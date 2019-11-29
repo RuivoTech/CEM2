@@ -20,9 +20,9 @@ if ($btn) {
         case "inscricoes":
             $condicao = ($val) == "" ? "" : "WHERE $btn.id=$val";
             if($evento){
-                $condicao = "WHERE $btn.idEvento=$val";
+                $condicao = "WHERE i.idEvento=$val";
             }
-            $pago = $condicao == "" ? "(case when i.pago then 'Sim' else 'Não' end) as pago" : "pago";
+            $pago = $evento || $lista != "*" ? "(case when i.pago then 'Sim' else 'Não' end) as pago" : "pago";
             if($lista == "*"){
                 $sql = "SELECT id, nome, email, celular, $pago, idEvento FROM $btn $condicao";
             }else{

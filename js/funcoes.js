@@ -282,6 +282,7 @@ function Enviar(btn) {
 }
 function Listar(btnValue, arr, val) {
 	var evento =  val != "" ? "&evento=1" : "";
+	$("#listTblBody tr").remove();
     $.ajax({
         async: true,
         type: "POST",
@@ -390,7 +391,7 @@ function Excluir(id) {
     $.ajax({
         type: "POST",
         url: "registrar.php",
-        data: "btn=excluir&excluir=membros&id=" + id + "&session=" + window.sessionStorage.getItem("session"),
+        data: "btn=excluir&excluir=" + $("#btnListar").val() + "&id=" + id + "&session=" + window.sessionStorage.getItem("session"),
         success: function (dados) {
             if (dados.verifica === 0) {
                 $("#mensagem").attr("class", "green");

@@ -23,6 +23,7 @@ nav{
     text-align: center;
     background-color: #1D6F23;
     color: #fff;
+    cursor: pointer;
 }
 .menu ul ul{
     position: absolute;
